@@ -1,7 +1,6 @@
-[gd_scene load_steps=17 format=3 uid="uid://dfcsh5b7ftcru"]
+[gd_scene load_steps=16 format=3 uid="uid://dfcsh5b7ftcru"]
 
 [ext_resource type="Script" path="res://scripts/player.gd" id="1_r1ckd"]
-[ext_resource type="AudioStream" uid="uid://dscpg6m666dta" path="res://assets/placeholder/sound/jump.wav" id="2_3uprx"]
 [ext_resource type="Texture2D" uid="uid://cik211m0nhqw8" path="res://assets/sprites/cats/black/cat-idle.png" id="2_vr7wn"]
 [ext_resource type="Texture2D" uid="uid://bfbw0fmf1po7e" path="res://assets/sprites/cats/black/cat-jump.png" id="3_agyiy"]
 [ext_resource type="Texture2D" uid="uid://d0nsb2oaf2u76" path="res://assets/sprites/cats/black/cat-run.png" id="4_elp8t"]
@@ -116,6 +115,3 @@ frame_progress = 0.860771
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(3, 3)
 shape = SubResource("RectangleShape2D_i6t87")
-
-[node name="JumpSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("2_3uprx")

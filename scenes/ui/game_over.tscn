@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://bxnp1o7kn7eyn"]
 
-[ext_resource type="FontFile" uid="uid://s15272omc2m3" path="res://assets/placeholder/fonts/retro.ttf" id="1_c1gf1"]
+[ext_resource type="FontFile" uid="uid://s15272omc2m3" path="res://assets/fonts/retro.ttf" id="1_c1gf1"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tb12c"]
 bg_color = Color(0.180005, 0.180005, 0.180005, 1)

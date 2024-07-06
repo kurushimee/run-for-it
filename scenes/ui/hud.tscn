@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://b2ygwns5dr211"]
 
-[ext_resource type="FontFile" uid="uid://s15272omc2m3" path="res://assets/placeholder/fonts/retro.ttf" id="1_wq3c8"]
+[ext_resource type="FontFile" uid="uid://s15272omc2m3" path="res://assets/fonts/retro.ttf" id="1_wq3c8"]
 
 [node name="HUD" type="CanvasLayer"]
 

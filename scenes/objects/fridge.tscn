@@ -1,0 +1,56 @@
+[gd_scene load_steps=7 format=3 uid="uid://w3a6bldv8nuf"]
+
+[ext_resource type="Texture2D" uid="uid://ka1wfn3ooco1" path="res://assets/sprites/obstacles/fridge.png" id="1_i3ty4"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7nb8j"]
+atlas = ExtResource("1_i3ty4")
+region = Rect2(0, 0, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pdx3y"]
+atlas = ExtResource("1_i3ty4")
+region = Rect2(16, 0, 16, 24)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l5idw"]
+atlas = ExtResource("1_i3ty4")
+region = Rect2(32, 0, 16, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_amvc1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7nb8j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pdx3y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l5idw")
+}],
+"loop": true,
+"name": &"burning",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0kpe7"]
+size = Vector2(84, 138)
+
+[node name="Fridge" type="Area2D"]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(6, 6)
+sprite_frames = SubResource("SpriteFrames_amvc1")
+animation = &"burning"
+autoplay = "burning"
+frame = 2
+frame_progress = 0.835793
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_0kpe7")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+scale = Vector2(6, 6)
+texture = ExtResource("1_i3ty4")
+region_enabled = true
+region_rect = Rect2(0, 0, 16, 24)
