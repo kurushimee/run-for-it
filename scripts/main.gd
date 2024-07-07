@@ -163,6 +163,7 @@ func adjust_difficulty() -> void:
 
 
 func end_game() -> void:
+	$Player/HitSound.play()
 	get_tree().paused = true
 	game_running = false
 	$RunningMusic/AnimationPlayer.play("fade_out")

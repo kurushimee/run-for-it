@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/items/coin.gd" id="1_xhfd4"]
 [ext_resource type="Texture2D" uid="uid://bl8utxdotvswc" path="res://assets/sprites/powerups/coin.png" id="2_4pv46"]
-[ext_resource type="AudioStream" uid="uid://cvmmnn6jal01n" path="res://assets/audio/sfx/pickup-coin.wav" id="3_7f616"]
+[ext_resource type="AudioStream" uid="uid://cvmmnn6jal01n" path="res://assets/audio/sfx/items/pickup-coin.wav" id="3_7f616"]
 [ext_resource type="FontFile" uid="uid://s15272omc2m3" path="res://assets/fonts/retro.ttf" id="4_keig4"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gvyjs"]
