@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://inor2v8tc0hs"]
+[gd_scene load_steps=23 format=3 uid="uid://inor2v8tc0hs"]
 
 [ext_resource type="FontFile" uid="uid://s15272omc2m3" path="res://assets/fonts/retro.ttf" id="1_ts5rb"]
 [ext_resource type="Script" path="res://scripts/ui/game_over.gd" id="1_xi2mm"]
@@ -131,6 +131,16 @@ func proceed(main: Node) -> void:
 	hud.render_time()
 "
 
+[sub_resource type="GDScript" id="GDScript_bmhsc"]
+resource_name = "BuyCat"
+script/source = "extends Node
+
+
+func proceed(main: Node) -> void:
+	main.cats_max += 1
+	main.generate_cat()
+"
+
 [sub_resource type="Animation" id="Animation_8k3tj"]
 length = 0.001
 tracks/0/type = "value"
@@ -240,9 +250,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_top = 480.0
-offset_right = 1080.0
-offset_bottom = 536.0
+offset_left = -576.0
+offset_top = -168.0
+offset_right = 504.0
+offset_bottom = -112.0
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_fonts/font = ExtResource("1_ts5rb")
@@ -270,10 +281,10 @@ anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
-offset_left = 542.0
-offset_top = 548.0
-offset_right = 1642.0
-offset_bottom = 632.0
+offset_left = -34.0
+offset_top = -100.0
+offset_right = 1066.0
+offset_bottom = -16.0
 grow_horizontal = 2
 grow_vertical = 0
 size_flags_horizontal = 4
@@ -319,6 +330,14 @@ item_price = 500
 
 [node name="PostTransaction" type="Node" parent="Shop/VBoxContainer/BuyTime"]
 script = SubResource("GDScript_i3cin")
+
+[node name="BuyCat" parent="Shop/VBoxContainer" instance=ExtResource("5_l70se")]
+layout_mode = 2
+item_name = "adopt a cat"
+item_price = 2500
+
+[node name="PostTransaction" type="Node" parent="Shop/VBoxContainer/BuyCat"]
+script = SubResource("GDScript_bmhsc")
 
 [node name="ShopMusic" type="AudioStreamPlayer" parent="."]
 process_mode = 3

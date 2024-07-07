@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c46u56kn4ir4y"]
+[gd_scene load_steps=15 format=3 uid="uid://c46u56kn4ir4y"]
 
 [ext_resource type="PackedScene" uid="uid://ce4x3xa1n7wsx" path="res://scenes/background.tscn" id="1_6icab"]
 [ext_resource type="PackedScene" uid="uid://c6kuvrcrxl2sr" path="res://scenes/ground.tscn" id="1_7x73t"]
@@ -6,14 +6,18 @@
 [ext_resource type="PackedScene" uid="uid://w3a6bldv8nuf" path="res://scenes/objects/fridge.tscn" id="2_3ln0l"]
 [ext_resource type="PackedScene" uid="uid://dfcsh5b7ftcru" path="res://scenes/player.tscn" id="2_rrhh7"]
 [ext_resource type="PackedScene" uid="uid://cmoxx3oim36xs" path="res://scenes/objects/coin.tscn" id="3_56a6i"]
+[ext_resource type="PackedScene" uid="uid://bu4jalvua6jk" path="res://scenes/cats/orange_cat.tscn" id="3_fs6co"]
+[ext_resource type="PackedScene" uid="uid://c260n62082sfx" path="res://scenes/cats/light_cat.tscn" id="4_li3ul"]
 [ext_resource type="PackedScene" uid="uid://so22h6q30vhj" path="res://scenes/objects/chair.tscn" id="4_yw5a7"]
 [ext_resource type="PackedScene" uid="uid://bqugp4dysqfuk" path="res://scenes/objects/bookshelf.tscn" id="5_2leii"]
 [ext_resource type="PackedScene" uid="uid://b2ygwns5dr211" path="res://scenes/ui/hud.tscn" id="5_mo7pu"]
 [ext_resource type="PackedScene" uid="uid://c0waeo1kbmicg" path="res://scenes/ui/running_music.tscn" id="8_i004v"]
 [ext_resource type="PackedScene" uid="uid://inor2v8tc0hs" path="res://scenes/ui/game_over.tscn" id="10_4c20w"]
+[ext_resource type="PackedScene" uid="uid://bc156o5in1r1k" path="res://scenes/cats/black_cat.tscn" id="12_qpud2"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_dejiq")
+cat_colors = Array[PackedScene]([ExtResource("12_qpud2"), ExtResource("3_fs6co"), ExtResource("4_li3ul")])
 available_obstacles = Array[PackedScene]([ExtResource("2_3ln0l"), ExtResource("3_56a6i"), ExtResource("4_yw5a7"), ExtResource("5_2leii")])
 
 [node name="Background" parent="." instance=ExtResource("1_6icab")]

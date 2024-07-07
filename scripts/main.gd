@@ -1,5 +1,9 @@
 extends Node
 
+@export var cat_colors: Array[PackedScene]
+var cats_max := 0
+var cats: Array[Cat]
+
 @export var available_obstacles: Array[PackedScene]
 var obstacles: Array[Item]
 
@@ -91,6 +95,7 @@ func new_game() -> void:
 	game_running = false
 	difficulty = 0
 
+	generate_cat()
 	# Delete all obstacles
 	for obstacle in obstacles:
 		obstacle.queue_free()
@@ -180,7 +185,7 @@ func end_game() -> void:
 	earned += run_reward
 	if earned < money:
 		earned *= 1 + (1 - earned / money)
-	money += earned
+	money += earned * clamp(cats_max, 1, 999)
 
 	$GameOver/Earned.text = "+" + str(earned) + "$"
 	$GameOver/Earned.modulate = Color.GREEN
@@ -188,3 +193,18 @@ func end_game() -> void:
 	$GameOver/Money.text = str(money) + "$"
 	$GameOver.show()
 	game_end.emit()
+
+
+func generate_cat() -> void:
+	if cats.size() >= cats_max:
+		return
+
+	for i in cats_max - cats.size():
+		var cat_type = cat_colors[randi() % cat_colors.size()]
+		var cat: Cat = cat_type.instantiate()
+		$Camera2D.add_child(cat)
+
+		cat.global_position.x = $Player.position.x - randi_range(45, PLAYER_START_POS.x)
+		cat.global_position.y = PLAYER_START_POS.y
+
+		cats.append(cat)

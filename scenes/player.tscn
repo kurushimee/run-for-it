@@ -110,10 +110,8 @@ script = ExtResource("1_r1ckd")
 z_index = 1
 scale = Vector2(6, 6)
 sprite_frames = SubResource("SpriteFrames_fba08")
-animation = &"run"
+animation = &"idle"
 autoplay = "idle"
-frame = 1
-frame_progress = 0.802399
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(3, 3)
