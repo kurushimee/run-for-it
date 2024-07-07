@@ -1,0 +1,59 @@
+[gd_scene load_steps=9 format=3 uid="uid://so22h6q30vhj"]
+
+[ext_resource type="Script" path="res://scripts/items/obstacle.gd" id="1_w2dec"]
+[ext_resource type="Texture2D" uid="uid://b618od7kilidc" path="res://assets/sprites/obstacles/chair.png" id="2_fl8vn"]
+[ext_resource type="PackedScene" uid="uid://yo4sexddq263" path="res://scenes/ui/random_fire.tscn" id="3_226xx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gv0f6"]
+atlas = ExtResource("2_fl8vn")
+region = Rect2(0, 0, 8, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_igsk2"]
+atlas = ExtResource("2_fl8vn")
+region = Rect2(8, 0, 8, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ueprb"]
+atlas = ExtResource("2_fl8vn")
+region = Rect2(16, 0, 8, 16)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_x33wu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gv0f6")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_igsk2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ueprb")
+}],
+"loop": true,
+"name": &"burn",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6aj2d"]
+size = Vector2(48, 78)
+
+[node name="Chair" type="Area2D"]
+script = ExtResource("1_w2dec")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+scale = Vector2(6, 6)
+sprite_frames = SubResource("SpriteFrames_x33wu")
+animation = &"burn"
+autoplay = "burn"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+visible = false
+scale = Vector2(6, 6)
+texture = ExtResource("2_fl8vn")
+region_enabled = true
+region_rect = Rect2(0, 0, 8, 16)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 9)
+shape = SubResource("RectangleShape2D_6aj2d")
+
+[node name="RandomFire" parent="." instance=ExtResource("3_226xx")]
