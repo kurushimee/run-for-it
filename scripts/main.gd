@@ -169,7 +169,7 @@ func end_game() -> void:
 	$RunningMusic/AnimationPlayer.play("fade_out")
 
 	# Calculate money reward for the run
-	var final_score: int = score / SCORE_MODIFIER / 10  # Calculate how much player gets from just running
+	var final_score: int = score / SCORE_MODIFIER / 5  # Calculate how much player gets from just running
 	var run_reward: int = final_score * (speed / START_SPEED)  # Add speed bonus to the ran amount
 	earned += run_reward
 	if earned < money:
