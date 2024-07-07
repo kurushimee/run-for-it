@@ -1,52 +1,49 @@
-[gd_scene load_steps=7 format=3 uid="uid://w3a6bldv8nuf"]
+[gd_scene load_steps=9 format=3 uid="uid://w3a6bldv8nuf"]
 
+[ext_resource type="Script" path="res://scripts/items/obstacle.gd" id="1_f8dmj"]
 [ext_resource type="Texture2D" uid="uid://ka1wfn3ooco1" path="res://assets/sprites/obstacles/fridge.png" id="1_i3ty4"]
+[ext_resource type="PackedScene" uid="uid://yo4sexddq263" path="res://scenes/ui/random_fire.tscn" id="2_8otl6"]
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_7nb8j"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_2dfct"]
 atlas = ExtResource("1_i3ty4")
 region = Rect2(0, 0, 16, 24)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_pdx3y"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_uq4fw"]
 atlas = ExtResource("1_i3ty4")
 region = Rect2(16, 0, 16, 24)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_l5idw"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_3lnkx"]
 atlas = ExtResource("1_i3ty4")
 region = Rect2(32, 0, 16, 24)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_amvc1"]
+[sub_resource type="SpriteFrames" id="SpriteFrames_ts0r4"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_7nb8j")
+"texture": SubResource("AtlasTexture_2dfct")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_pdx3y")
+"texture": SubResource("AtlasTexture_uq4fw")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_l5idw")
+"texture": SubResource("AtlasTexture_3lnkx")
 }],
 "loop": true,
-"name": &"burning",
+"name": &"burn",
 "speed": 5.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_0kpe7"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7vojj"]
 size = Vector2(84, 138)
 
 [node name="Fridge" type="Area2D"]
+script = ExtResource("1_f8dmj")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 scale = Vector2(6, 6)
-sprite_frames = SubResource("SpriteFrames_amvc1")
-animation = &"burning"
-autoplay = "burning"
-frame = 2
-frame_progress = 0.835793
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 3)
-shape = SubResource("RectangleShape2D_0kpe7")
+sprite_frames = SubResource("SpriteFrames_ts0r4")
+animation = &"burn"
+autoplay = "burn"
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 visible = false
@@ -54,3 +51,9 @@ scale = Vector2(6, 6)
 texture = ExtResource("1_i3ty4")
 region_enabled = true
 region_rect = Rect2(0, 0, 16, 24)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 3)
+shape = SubResource("RectangleShape2D_7vojj")
+
+[node name="RandomFire" parent="." instance=ExtResource("2_8otl6")]

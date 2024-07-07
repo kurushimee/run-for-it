@@ -1,7 +1,7 @@
 extends Node
 
 @export var available_obstacles: Array[PackedScene]
-var obstacles: Array[Area2D]
+var obstacles: Array[Item]
 
 # Initial positions
 const PLAYER_START_POS := Vector2i(150, 444)
@@ -12,9 +12,13 @@ var score: int
 const SCORE_MODIFIER := 10
 var high_score: int
 
+# Money
+var money := 0
+var earned: int
+
 # Player moving speed
 var speed: float
-const START_SPEED := 10.0
+const START_SPEED := 12.0
 const MAX_SPEED := 25.0
 const PROSTO_SPEED := 100
 const SPEED_MODIFIER := 5000
@@ -25,7 +29,7 @@ var game_running: bool
 var difficulty: int
 const MAX_DIFFICULTY := 2
 
-var last_obstacle: Area2D
+var last_obstacle: Item
 
 var ground_height: int
 var ground_scale: int
@@ -76,6 +80,7 @@ func new_game() -> void:
 	# Reset variables
 	speed = START_SPEED
 	score = 0
+	earned = 0
 	show_score()
 	get_tree().paused = false
 	game_running = false
@@ -116,7 +121,7 @@ func generate_obstacle() -> void:
 			if last_obstacle.position.x >= score + randi_range(300, 500):
 				return
 	var obstacle_type := available_obstacles[randi() % available_obstacles.size()]
-	var obstacle: Area2D
+	var obstacle: Item
 
 	var max_obstacles := difficulty + 1
 	for i in randi() % max_obstacles + 1:
@@ -139,9 +144,10 @@ func generate_obstacle() -> void:
 		add_obstacle(obstacle, obstacle_x, obstacle_y)
 
 
-func add_obstacle(obstacle: Area2D, x: int, y: int) -> void:
+func add_obstacle(obstacle: Item, x: int, y: int) -> void:
 	obstacle.position = Vector2i(x, y)
-	obstacle.body_entered.connect(hit_obstacle)
+	obstacle.main = self
+	obstacle.body_entered.connect(obstacle.on_hit)
 	last_obstacle = obstacle
 	add_child(obstacle)
 	obstacles.append(obstacle)
@@ -152,11 +158,6 @@ func remove_obstacle(obstacle: Area2D):
 	obstacle.queue_free()
 
 
-func hit_obstacle(body: Object) -> void:
-	if body.name == "Player":
-		end_game()
-
-
 func adjust_difficulty() -> void:
 	difficulty = clamp(score / SPEED_MODIFIER, 0, MAX_DIFFICULTY)
 
@@ -164,5 +165,16 @@ func adjust_difficulty() -> void:
 func end_game() -> void:
 	get_tree().paused = true
 	game_running = false
-	$GameOver.show()
 	$RunningMusic/AnimationPlayer.play("fade_out")
+
+	# Calculate money reward for the run
+	var final_score: int = score / SCORE_MODIFIER / 10  # Calculate how much player gets from just running
+	var run_reward: int = final_score * (speed / START_SPEED)  # Add speed bonus to the ran amount
+	earned += run_reward
+	if earned < money:
+		earned *= 1 + (1 - earned / money)
+	money += earned
+
+	$GameOver/Earned.text = "+" + str(earned) + "$"
+	$GameOver/Money.text = str(money) + "$"
+	$GameOver.show()

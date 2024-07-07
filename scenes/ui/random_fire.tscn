@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=3 uid="uid://yo4sexddq263"]
+
+[ext_resource type="AudioStream" uid="uid://d332ipwc0mjh5" path="res://assets/audio/sfx/fire/burning-wood-2.wav" id="1_4jokk"]
+[ext_resource type="AudioStream" uid="uid://cunbfle74syrn" path="res://assets/audio/sfx/fire/fireburn.wav" id="2_kabrm"]
+[ext_resource type="AudioStream" uid="uid://b7tyxrgr7wqyv" path="res://assets/audio/sfx/fire/newspaper-burning.wav" id="3_26wko"]
+[ext_resource type="AudioStream" uid="uid://bjspeju061upm" path="res://assets/audio/sfx/fire/fireplace-burning.wav" id="4_ovm8g"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_l7aji"]
+playback_mode = 1
+random_pitch = 5.0
+random_volume_offset_db = 5.0
+streams_count = 4
+stream_0/stream = ExtResource("1_4jokk")
+stream_0/weight = 1.0
+stream_1/stream = ExtResource("2_kabrm")
+stream_1/weight = 1.0
+stream_2/stream = ExtResource("3_26wko")
+stream_2/weight = 1.0
+stream_3/stream = ExtResource("4_ovm8g")
+stream_3/weight = 1.0
+
+[node name="RandomFire" type="AudioStreamPlayer2D"]
+stream = SubResource("AudioStreamRandomizer_l7aji")
+volume_db = -5.0
+autoplay = true
+max_distance = 1000.0
+bus = &"SFX"
