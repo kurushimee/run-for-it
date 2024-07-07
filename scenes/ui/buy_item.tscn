@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://b3a4573kbhxh7"]
+
+[ext_resource type="Script" path="res://scripts/ui/buy_item.gd" id="1_huqkf"]
+[ext_resource type="FontFile" uid="uid://s15272omc2m3" path="res://assets/fonts/retro.ttf" id="1_j85y8"]
+[ext_resource type="AudioStream" uid="uid://dtdtxerciseny" path="res://assets/audio/sfx/ui/buttonrollover.wav" id="3_hk3pe"]
+[ext_resource type="AudioStream" uid="uid://b5x8iqv0hy4aj" path="res://assets/audio/sfx/ui/buttonclick.wav" id="4_x17aq"]
+
+[node name="BuyItem" type="HBoxContainer"]
+alignment = 1
+script = ExtResource("1_huqkf")
+
+[node name="Name" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 2
+theme_override_fonts/font = ExtResource("1_j85y8")
+theme_override_font_sizes/font_size = 22
+text = "null"
+vertical_alignment = 1
+
+[node name="Price" type="Label" parent="."]
+layout_mode = 2
+size_flags_horizontal = 10
+theme_override_fonts/font = ExtResource("1_j85y8")
+theme_override_font_sizes/font_size = 22
+text = "$0"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="Hover" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_hk3pe")
+
+[node name="Press" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_x17aq")
+
+[connection signal="gui_input" from="." to="." method="_on_gui_input"]
+[connection signal="mouse_entered" from="." to="." method="_on_mouse_entered"]
+[connection signal="mouse_exited" from="." to="." method="_on_mouse_exited"]

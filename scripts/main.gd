@@ -183,6 +183,7 @@ func end_game() -> void:
 	money += earned
 
 	$GameOver/Earned.text = "+" + str(earned) + "$"
+	$GameOver/Earned.modulate = Color.GREEN
 	$GameOver/Earned.reset()
 	$GameOver/Money.text = str(money) + "$"
 	$GameOver.show()
