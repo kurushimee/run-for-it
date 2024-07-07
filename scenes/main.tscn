@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://c46u56kn4ir4y"]
+[gd_scene load_steps=12 format=3 uid="uid://c46u56kn4ir4y"]
 
 [ext_resource type="PackedScene" uid="uid://ce4x3xa1n7wsx" path="res://scenes/background.tscn" id="1_6icab"]
 [ext_resource type="PackedScene" uid="uid://c6kuvrcrxl2sr" path="res://scenes/ground.tscn" id="1_7x73t"]
@@ -7,13 +7,14 @@
 [ext_resource type="PackedScene" uid="uid://dfcsh5b7ftcru" path="res://scenes/player.tscn" id="2_rrhh7"]
 [ext_resource type="PackedScene" uid="uid://cmoxx3oim36xs" path="res://scenes/objects/coin.tscn" id="3_56a6i"]
 [ext_resource type="PackedScene" uid="uid://so22h6q30vhj" path="res://scenes/objects/chair.tscn" id="4_yw5a7"]
+[ext_resource type="PackedScene" uid="uid://bqugp4dysqfuk" path="res://scenes/objects/bookshelf.tscn" id="5_2leii"]
 [ext_resource type="PackedScene" uid="uid://b2ygwns5dr211" path="res://scenes/ui/hud.tscn" id="5_mo7pu"]
 [ext_resource type="PackedScene" uid="uid://bxnp1o7kn7eyn" path="res://scenes/ui/game_over.tscn" id="7_1koxl"]
 [ext_resource type="PackedScene" uid="uid://c0waeo1kbmicg" path="res://scenes/ui/running_music.tscn" id="8_i004v"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_dejiq")
-available_obstacles = Array[PackedScene]([ExtResource("2_3ln0l"), ExtResource("3_56a6i"), ExtResource("4_yw5a7")])
+available_obstacles = Array[PackedScene]([ExtResource("2_3ln0l"), ExtResource("3_56a6i"), ExtResource("4_yw5a7"), ExtResource("5_2leii")])
 
 [node name="Background" parent="." instance=ExtResource("1_6icab")]
 

@@ -1,0 +1,17 @@
+[gd_scene load_steps=4 format=3 uid="uid://bqugp4dysqfuk"]
+
+[ext_resource type="Script" path="res://scripts/items/obstacle.gd" id="1_737ji"]
+[ext_resource type="Texture2D" uid="uid://niposccj7bte" path="res://assets/sprites/obstacles/bookshelf.png" id="2_2snwm"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lmqbr"]
+size = Vector2(96, 144)
+
+[node name="Bookshelf" type="Area2D"]
+script = ExtResource("1_737ji")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(6, 6)
+texture = ExtResource("2_2snwm")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_lmqbr")
