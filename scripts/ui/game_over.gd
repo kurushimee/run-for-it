@@ -2,6 +2,8 @@ extends CanvasLayer
 
 @export var main: Node
 
+@export var free_items: bool
+
 
 func _ready() -> void:
 	recalculate_available_items()
@@ -12,7 +14,7 @@ func _ready() -> void:
 
 func recalculate_available_items() -> void:
 	for item in $Shop/VBoxContainer.get_children():
-		if main.money < item.item_price:
+		if main.money < item.item_price and not free_items:
 			item.modulate = Color("909090")
 			item.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		else:
@@ -31,6 +33,8 @@ func _on_reset_game() -> void:
 
 
 func _on_bought(cost: int) -> void:
+	if free_items:
+		return
 	main.money -= cost
 	$Money.text = "$" + str(main.money)
 	$Earned.text = "-" + str(cost) + "$"

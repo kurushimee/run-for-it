@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://w6tq8mbbnkjn"]
+[gd_scene load_steps=14 format=3 uid="uid://w6tq8mbbnkjn"]
 
 [ext_resource type="Texture2D" uid="uid://wi118gb1rfr3" path="res://assets/sprites/background/background.png" id="1_1palg"]
 [ext_resource type="Texture2D" uid="uid://bfcu4ab1ctwqu" path="res://assets/sprites/background/layer1.png" id="2_5oggo"]
@@ -6,6 +6,8 @@
 [ext_resource type="FontFile" uid="uid://s15272omc2m3" path="res://assets/fonts/retro.ttf" id="4_a4hcf"]
 [ext_resource type="PackedScene" uid="uid://c46u56kn4ir4y" path="res://scenes/main.tscn" id="5_72101"]
 [ext_resource type="AudioStream" uid="uid://b820bx8yxvrpj" path="res://assets/audio/music/main-theme.wav" id="6_fl22q"]
+[ext_resource type="AudioStream" uid="uid://dtdtxerciseny" path="res://assets/audio/sfx/ui/buttonrollover.wav" id="6_ts7gd"]
+[ext_resource type="AudioStream" uid="uid://ym5t3fjetgq8" path="res://assets/audio/sfx/ui/buttonclickrelease.wav" id="7_7eudm"]
 
 [sub_resource type="GDScript" id="GDScript_t028o"]
 resource_name = "PlayButton"
@@ -134,6 +136,14 @@ text = "PLAY"
 script = SubResource("GDScript_t028o")
 main_scene = ExtResource("5_72101")
 
+[node name="HoverSound" type="AudioStreamPlayer" parent="MainContainer/PlayButton"]
+stream = ExtResource("6_ts7gd")
+bus = &"UI"
+
+[node name="PressSound" type="AudioStreamPlayer" parent="MainContainer/PlayButton"]
+stream = ExtResource("7_7eudm")
+bus = &"UI"
+
 [node name="VSeparator" type="VSeparator" parent="MainContainer"]
 modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(0, 25)
@@ -148,6 +158,14 @@ script = SubResource("GDScript_xtv14")
 main_container = NodePath("..")
 settings_container = NodePath("../../SettingsContainer")
 
+[node name="HoverSound" type="AudioStreamPlayer" parent="MainContainer/SettingsButton"]
+stream = ExtResource("6_ts7gd")
+bus = &"UI"
+
+[node name="PressSound" type="AudioStreamPlayer" parent="MainContainer/SettingsButton"]
+stream = ExtResource("7_7eudm")
+bus = &"UI"
+
 [node name="VSeparator2" type="VSeparator" parent="MainContainer"]
 modulate = Color(1, 1, 1, 0)
 custom_minimum_size = Vector2(0, 25)
@@ -159,6 +177,15 @@ theme_override_fonts/font = ExtResource("4_a4hcf")
 theme_override_font_sizes/font_size = 44
 text = "EXIT"
 script = SubResource("GDScript_0q5ge")
+
+[node name="HoverSound" type="AudioStreamPlayer" parent="MainContainer/ExitButton"]
+stream = ExtResource("6_ts7gd")
+bus = &"UI"
+
+[node name="PressSound" type="AudioStreamPlayer" parent="MainContainer/ExitButton"]
+process_mode = 3
+stream = ExtResource("7_7eudm")
+bus = &"UI"
 
 [node name="SettingsContainer" type="VBoxContainer" parent="."]
 visible = false
@@ -298,16 +325,32 @@ script = SubResource("GDScript_rspdh")
 main_container = NodePath("../../MainContainer")
 settings_container = NodePath("..")
 
+[node name="HoverSound" type="AudioStreamPlayer" parent="SettingsContainer/BackButton"]
+stream = ExtResource("6_ts7gd")
+bus = &"UI"
+
+[node name="PressSound" type="AudioStreamPlayer" parent="SettingsContainer/BackButton"]
+stream = ExtResource("7_7eudm")
+bus = &"UI"
+
 [node name="BackgroundMusic" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("6_fl22q")
 autoplay = true
 bus = &"Music"
 
+[connection signal="button_up" from="MainContainer/PlayButton" to="MainContainer/PlayButton/PressSound" method="play"]
+[connection signal="mouse_entered" from="MainContainer/PlayButton" to="MainContainer/PlayButton/HoverSound" method="play"]
 [connection signal="pressed" from="MainContainer/PlayButton" to="MainContainer/PlayButton" method="_on_pressed"]
+[connection signal="button_up" from="MainContainer/SettingsButton" to="MainContainer/SettingsButton/PressSound" method="play"]
+[connection signal="mouse_entered" from="MainContainer/SettingsButton" to="MainContainer/SettingsButton/HoverSound" method="play"]
 [connection signal="pressed" from="MainContainer/SettingsButton" to="MainContainer/SettingsButton" method="_on_pressed"]
-[connection signal="pressed" from="MainContainer/ExitButton" to="MainContainer/ExitButton" method="_on_pressed"]
+[connection signal="button_up" from="MainContainer/ExitButton" to="MainContainer/ExitButton/PressSound" method="play"]
+[connection signal="mouse_entered" from="MainContainer/ExitButton" to="MainContainer/ExitButton/HoverSound" method="play"]
+[connection signal="finished" from="MainContainer/ExitButton/PressSound" to="MainContainer/ExitButton" method="_on_pressed"]
 [connection signal="value_changed" from="SettingsContainer/MasterContainer/HBoxContainer/HSlider" to="SettingsContainer" method="_on_master_volume_changed"]
 [connection signal="value_changed" from="SettingsContainer/MusicContainer/HBoxContainer/HSlider" to="SettingsContainer" method="_on_music_volume_changed"]
 [connection signal="value_changed" from="SettingsContainer/SFXContainer/HBoxContainer/HSlider" to="SettingsContainer" method="_on_sfx_volume_changed"]
 [connection signal="value_changed" from="SettingsContainer/UIContainer/HBoxContainer/HSlider" to="SettingsContainer" method="_on_ui_volume_changed"]
+[connection signal="button_up" from="SettingsContainer/BackButton" to="SettingsContainer/BackButton/PressSound" method="play"]
+[connection signal="mouse_entered" from="SettingsContainer/BackButton" to="SettingsContainer/BackButton/HoverSound" method="play"]
 [connection signal="pressed" from="SettingsContainer/BackButton" to="SettingsContainer/BackButton" method="_on_pressed"]

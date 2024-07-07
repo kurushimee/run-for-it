@@ -1,8 +1,20 @@
 extends Node
 
 @export var cat_colors: Array[PackedScene]
+@export var blue_cat: PackedScene
+@export var green_cat: PackedScene
+@export var pink_cat: PackedScene
 var cats_max := 0
 var cats: Array[Cat]
+const GREEN_UP := 4
+var green_max := 0
+var greens: Array[Cat]
+const PINK_UP := 8
+var pink_max := 0
+var pinks: Array[Cat]
+const BLUE_UP := 16
+var blue_max := 0
+var blues: Array[Cat]
 
 @export var available_obstacles: Array[PackedScene]
 var obstacles: Array[Item]
@@ -185,7 +197,13 @@ func end_game() -> void:
 	earned += run_reward
 	if earned < money:
 		earned *= 1 + (1 - earned / money)
-	money += earned * clamp(cats_max, 1, 999)
+	money += (
+		earned
+		* clamp(cats_max, 1, 999)
+		* clamp(green_max * GREEN_UP, 1, 999)
+		* clamp(pink_max * PINK_UP, 1, 999)
+		* clamp(blue_max * BLUE_UP, 1, 999)
+	)
 
 	$GameOver/Earned.text = "+" + str(earned) + "$"
 	$GameOver/Earned.modulate = Color.GREEN
@@ -196,15 +214,26 @@ func end_game() -> void:
 
 
 func generate_cat() -> void:
-	if cats.size() >= cats_max:
-		return
+	if greens.size() < green_max:
+		for i in green_max - greens.size():
+			greens.append(add_cat(green_cat))
+	elif pinks.size() < pink_max:
+		for i in pink_max - pinks.size():
+			pinks.append(add_cat(pink_cat))
+	elif blues.size() < blue_max:
+		for i in blue_max - blues.size():
+			blues.append(add_cat(blue_cat))
+	elif cats.size() < cats_max:
+		for i in cats_max - cats.size():
+			var cat_type = cat_colors[randi() % cat_colors.size()]
+			cats.append(add_cat(cat_type))
 
-	for i in cats_max - cats.size():
-		var cat_type = cat_colors[randi() % cat_colors.size()]
-		var cat: Cat = cat_type.instantiate()
-		$Camera2D.add_child(cat)
 
-		cat.global_position.x = $Player.position.x - randi_range(45, PLAYER_START_POS.x)
-		cat.global_position.y = PLAYER_START_POS.y
+func add_cat(cat_type: PackedScene) -> Cat:
+	var cat: Cat = cat_type.instantiate()
+	$Camera2D.add_child(cat)
 
-		cats.append(cat)
+	cat.global_position.x = $Player.position.x - randi_range(45, PLAYER_START_POS.x)
+	cat.global_position.y = PLAYER_START_POS.y
+
+	return cat
