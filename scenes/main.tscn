@@ -9,8 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://so22h6q30vhj" path="res://scenes/objects/chair.tscn" id="4_yw5a7"]
 [ext_resource type="PackedScene" uid="uid://bqugp4dysqfuk" path="res://scenes/objects/bookshelf.tscn" id="5_2leii"]
 [ext_resource type="PackedScene" uid="uid://b2ygwns5dr211" path="res://scenes/ui/hud.tscn" id="5_mo7pu"]
-[ext_resource type="PackedScene" uid="uid://bxnp1o7kn7eyn" path="res://scenes/ui/game_over.tscn" id="7_1koxl"]
 [ext_resource type="PackedScene" uid="uid://c0waeo1kbmicg" path="res://scenes/ui/running_music.tscn" id="8_i004v"]
+[ext_resource type="PackedScene" uid="uid://inor2v8tc0hs" path="res://scenes/ui/game_over.tscn" id="10_4c20w"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_dejiq")
@@ -28,6 +28,12 @@ position = Vector2(576, 324)
 
 [node name="HUD" parent="." instance=ExtResource("5_mo7pu")]
 
-[node name="GameOver" parent="." instance=ExtResource("7_1koxl")]
+[node name="GameOver" parent="." instance=ExtResource("10_4c20w")]
 
 [node name="RunningMusic" parent="." instance=ExtResource("8_i004v")]
+
+[connection signal="game_end" from="." to="GameOver" method="_on_game_end"]
+[connection signal="reset_game" from="." to="HUD" method="reset"]
+[connection signal="reset_game" from="." to="GameOver" method="_on_reset_game"]
+[connection signal="start_game" from="." to="HUD" method="_on_start_game"]
+[connection signal="time_expired" from="HUD" to="." method="end_game"]

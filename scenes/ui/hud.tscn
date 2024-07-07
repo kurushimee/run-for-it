@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://b2ygwns5dr211"]
+[gd_scene load_steps=3 format=3 uid="uid://b2ygwns5dr211"]
 
+[ext_resource type="Script" path="res://scripts/hud.gd" id="1_t41og"]
 [ext_resource type="FontFile" uid="uid://s15272omc2m3" path="res://assets/fonts/retro.ttf" id="1_wq3c8"]
 
 [node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_t41og")
 
 [node name="ScoreLabel" type="Label" parent="."]
 offset_right = 214.0
@@ -40,3 +42,14 @@ theme_override_fonts/font = ExtResource("1_wq3c8")
 theme_override_font_sizes/font_size = 40
 text = "PRESS SPACE TO PLAY"
 horizontal_alignment = 1
+
+[node name="TimeLabel" type="Label" parent="."]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 84.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("1_wq3c8")
+theme_override_font_sizes/font_size = 66
+text = "0:05"
+horizontal_alignment = 1
+vertical_alignment = 2

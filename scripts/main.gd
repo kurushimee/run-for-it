@@ -34,6 +34,10 @@ var last_obstacle: Item
 var ground_height: int
 var ground_scale: int
 
+signal reset_game
+signal start_game
+signal game_end
+
 
 func _ready() -> void:
 	screen_size = get_window().size
@@ -48,6 +52,7 @@ func _process(delta: float) -> void:
 		if Input.is_action_pressed("jump"):
 			game_running = true
 			$HUD/StartLabel.hide()
+			start_game.emit()
 		else:
 			return
 
@@ -101,7 +106,9 @@ func new_game() -> void:
 	# Reset HUD
 	$HUD/StartLabel.show()
 	$GameOver.hide()
-	$RunningMusic/AnimationPlayer.play("fade_in")
+	$RunningMusic.play()
+	$RunningMusic/AnimationPlayer.play("ost_fade_in")
+	reset_game.emit()
 
 
 func show_score() -> void:
@@ -163,13 +170,12 @@ func adjust_difficulty() -> void:
 
 
 func end_game() -> void:
-	$Player/HitSound.play()
 	get_tree().paused = true
 	game_running = false
-	$RunningMusic/AnimationPlayer.play("fade_out")
+	$RunningMusic/AnimationPlayer.play("ost_fade_out")
 
 	# Calculate money reward for the run
-	var final_score: int = score / SCORE_MODIFIER / 5  # Calculate how much player gets from just running
+	var final_score: int = score / SCORE_MODIFIER / 10  # Calculate how much player gets from just running
 	var run_reward: int = final_score * (speed / START_SPEED)  # Add speed bonus to the ran amount
 	earned += run_reward
 	if earned < money:
@@ -177,5 +183,7 @@ func end_game() -> void:
 	money += earned
 
 	$GameOver/Earned.text = "+" + str(earned) + "$"
+	$GameOver/Earned.reset()
 	$GameOver/Money.text = str(money) + "$"
 	$GameOver.show()
+	game_end.emit()

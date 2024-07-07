@@ -2,7 +2,23 @@
 
 [ext_resource type="AudioStream" uid="uid://cvsniboc7lj3h" path="res://assets/audio/music/run.wav" id="1_5d37u"]
 
-[sub_resource type="Animation" id="Animation_khcg0"]
+[sub_resource type="Animation" id="Animation_ex6u5"]
+resource_name = "ost_fade_in"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath(".:volume_db")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [-80.0, 0.0]
+}
+
+[sub_resource type="Animation" id="Animation_sqmrx"]
 length = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -16,21 +32,10 @@ tracks/0/keys = {
 "update": 0,
 "values": [0.0]
 }
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:playing")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
 
-[sub_resource type="Animation" id="Animation_r4nr1"]
-resource_name = "fade_in"
+[sub_resource type="Animation" id="Animation_rxhit"]
+resource_name = "ost_fade_out"
+length = 0.5
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -38,66 +43,39 @@ tracks/0/path = NodePath(".:volume_db")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 0,
-"values": [-80.0, 0.0]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:playing")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [true]
-}
-
-[sub_resource type="Animation" id="Animation_yxwkp"]
-resource_name = "fade_out"
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:volume_db")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0, 1),
+"times": PackedFloat32Array(0, 0.5),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
 "values": [0.0, -80.0]
 }
-tracks/1/type = "value"
+tracks/1/type = "method"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath(".:playing")
+tracks/1/path = NodePath(".")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [true, false]
+"times": PackedFloat32Array(0.5),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"stop"
+}]
 }
 
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_3v6uw"]
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_2mmvu"]
 _data = {
-"RESET": SubResource("Animation_khcg0"),
-"fade_in": SubResource("Animation_r4nr1"),
-"fade_out": SubResource("Animation_yxwkp")
+"RESET": SubResource("Animation_sqmrx"),
+"ost_fade_in": SubResource("Animation_ex6u5"),
+"ost_fade_out": SubResource("Animation_rxhit")
 }
 
 [node name="RunningMusic" type="AudioStreamPlayer"]
 process_mode = 3
 stream = ExtResource("1_5d37u")
-autoplay = true
 bus = &"Music"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_3v6uw")
+"": SubResource("AnimationLibrary_2mmvu")
 }
-autoplay = "fade_in"
