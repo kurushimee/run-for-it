@@ -30,6 +30,7 @@ var high_score: int
 
 # Money
 var money := 0
+var max_money := 0
 var earned: int
 
 # Player moving speed
@@ -56,7 +57,7 @@ signal game_end
 
 
 func _ready() -> void:
-	screen_size = get_window().size
+	screen_size = get_viewport().size
 	ground_height = $Ground/Sprite2D.texture.get_height()
 	ground_scale = $Ground/Sprite2D.scale.y
 	$GameOver/Button.pressed.connect(new_game)
@@ -64,6 +65,11 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	if Input.is_action_just_pressed("menu"):
+		$Menu.show()
+		get_tree().paused = true
+		return
+
 	if not game_running:
 		if Input.is_action_pressed("jump"):
 			game_running = true
@@ -186,24 +192,30 @@ func adjust_difficulty() -> void:
 	difficulty = clamp(score / SPEED_MODIFIER, 0, MAX_DIFFICULTY)
 
 
+func calculate_run_reward() -> int:
+	var final_score: int = score / SCORE_MODIFIER / 7  # Calculate how much player gets from just running
+	var run_reward: int = final_score * (speed / START_SPEED)  # Add speed bonus to the ran amount
+	run_reward *= (
+		clamp(cats_max, 1, 999)
+		* clamp(green_max * GREEN_UP, 1, 999)
+		* clamp(pink_max * PINK_UP, 1, 999)
+		* clamp(blue_max * BLUE_UP, 1, 999)
+	)
+	if earned + run_reward < max_money:
+		run_reward *= 1 + (1 - (earned + run_reward) / max_money)
+	return run_reward
+
+
 func end_game() -> void:
 	get_tree().paused = true
 	game_running = false
 	$RunningMusic/AnimationPlayer.play("ost_fade_out")
 
 	# Calculate money reward for the run
-	var final_score: int = score / SCORE_MODIFIER / 10  # Calculate how much player gets from just running
-	var run_reward: int = final_score * (speed / START_SPEED)  # Add speed bonus to the ran amount
-	earned += run_reward
-	if earned < money:
-		earned *= 1 + (1 - earned / money)
-	money += (
-		earned
-		* clamp(cats_max, 1, 999)
-		* clamp(green_max * GREEN_UP, 1, 999)
-		* clamp(pink_max * PINK_UP, 1, 999)
-		* clamp(blue_max * BLUE_UP, 1, 999)
-	)
+	earned += calculate_run_reward()
+	money += earned
+	if money > max_money:
+		max_money = money
 
 	$GameOver/Earned.text = "+" + str(earned) + "$"
 	$GameOver/Earned.modulate = Color.GREEN

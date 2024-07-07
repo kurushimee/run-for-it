@@ -1,4 +1,4 @@
-[gd_scene load_steps=20 format=3 uid="uid://c46u56kn4ir4y"]
+[gd_scene load_steps=21 format=3 uid="uid://c46u56kn4ir4y"]
 
 [ext_resource type="PackedScene" uid="uid://ce4x3xa1n7wsx" path="res://scenes/background.tscn" id="1_6icab"]
 [ext_resource type="PackedScene" uid="uid://c6kuvrcrxl2sr" path="res://scenes/ground.tscn" id="1_7x73t"]
@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" uid="uid://dwccscvhgbkaj" path="res://scenes/cats/pink_cat.tscn" id="9_0rni0"]
 [ext_resource type="PackedScene" uid="uid://inor2v8tc0hs" path="res://scenes/ui/game_over.tscn" id="10_4c20w"]
 [ext_resource type="PackedScene" uid="uid://bc156o5in1r1k" path="res://scenes/cats/black_cat.tscn" id="12_qpud2"]
+[ext_resource type="PackedScene" uid="uid://xmcamt5xtmet" path="res://scenes/ui/menu.tscn" id="20_ym1el"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_dejiq")
@@ -44,6 +45,9 @@ position = Vector2(576, 324)
 main = NodePath("..")
 
 [node name="RunningMusic" parent="." instance=ExtResource("8_i004v")]
+
+[node name="Menu" parent="." instance=ExtResource("20_ym1el")]
+visible = false
 
 [connection signal="game_end" from="." to="GameOver" method="_on_game_end"]
 [connection signal="reset_game" from="." to="HUD" method="reset"]

@@ -1,0 +1,306 @@
+[gd_scene load_steps=9 format=3 uid="uid://xmcamt5xtmet"]
+
+[ext_resource type="Texture2D" uid="uid://wi118gb1rfr3" path="res://assets/sprites/background/background.png" id="1_i5pv7"]
+[ext_resource type="FontFile" uid="uid://s15272omc2m3" path="res://assets/fonts/retro.ttf" id="4_facay"]
+[ext_resource type="AudioStream" uid="uid://dtdtxerciseny" path="res://assets/audio/sfx/ui/buttonrollover.wav" id="6_134ry"]
+[ext_resource type="AudioStream" uid="uid://ym5t3fjetgq8" path="res://assets/audio/sfx/ui/buttonclickrelease.wav" id="7_kf8uo"]
+
+[sub_resource type="GDScript" id="GDScript_t028o"]
+resource_name = "PlayButton"
+script/source = "extends Button
+
+@export var menu: Node
+
+
+func _on_pressed() -> void:
+	get_tree().paused = false
+	menu.hide()
+"
+
+[sub_resource type="GDScript" id="GDScript_xtv14"]
+resource_name = "SettingsButton"
+script/source = "extends Button
+
+@export var main_container: VBoxContainer
+@export var settings_container: VBoxContainer
+
+
+func _ready() -> void:
+	main_container.show()
+	settings_container.hide()
+
+
+func _on_pressed() -> void:
+	main_container.hide()
+	settings_container.show()
+"
+
+[sub_resource type="GDScript" id="GDScript_q2m0l"]
+resource_name = "Settings"
+script/source = "extends VBoxContainer
+
+
+func _ready() -> void:
+	var busses := [\"Master\", \"Music\", \"SFX\", \"UI\"]
+	for bus in busses:
+		set_bus_volume(bus, 0.5)
+
+
+func set_bus_volume(bus: String, value: float) -> void:
+	var bus_index := AudioServer.get_bus_index(bus)
+	AudioServer.set_bus_volume_db(bus_index, linear_to_db(value))
+
+
+func _on_master_volume_changed(value: float) -> void:
+	set_bus_volume(\"Master\", value)
+	$MasterContainer/HBoxContainer/VolumeLabel.text = \"%d%%\" % (value * 100)
+
+
+func _on_music_volume_changed(value: float) -> void:
+	set_bus_volume(\"Music\", value)
+	$MusicContainer/HBoxContainer/VolumeLabel.text = \"%d%%\" % (value * 100)
+
+
+func _on_sfx_volume_changed(value: float) -> void:
+	set_bus_volume(\"SFX\", value)
+	$SFXContainer/HBoxContainer/VolumeLabel.text = \"%d%%\" % (value * 100)
+
+
+func _on_ui_volume_changed(value: float) -> void:
+	set_bus_volume(\"UI\", value)
+	$UIContainer/HBoxContainer/VolumeLabel.text = \"%d%%\" % (value * 100)
+"
+
+[sub_resource type="GDScript" id="GDScript_rspdh"]
+resource_name = "BackButton"
+script/source = "extends Button
+
+@export var main_container: VBoxContainer
+@export var settings_container: VBoxContainer
+
+
+func _on_pressed() -> void:
+	settings_container.hide()
+	main_container.show()
+"
+
+[node name="Menu" type="CanvasLayer"]
+process_mode = 2
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.784314)
+scale = Vector2(6, 6)
+texture = ExtResource("1_i5pv7")
+centered = false
+
+[node name="MainContainer" type="VBoxContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -100.0
+offset_top = -32.0
+offset_right = 100.0
+offset_bottom = 32.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+
+[node name="PlayButton" type="Button" parent="MainContainer" node_paths=PackedStringArray("menu")]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_facay")
+theme_override_font_sizes/font_size = 44
+text = "CONTINUE"
+script = SubResource("GDScript_t028o")
+menu = NodePath("../..")
+
+[node name="HoverSound" type="AudioStreamPlayer" parent="MainContainer/PlayButton"]
+stream = ExtResource("6_134ry")
+bus = &"UI"
+
+[node name="PressSound" type="AudioStreamPlayer" parent="MainContainer/PlayButton"]
+stream = ExtResource("7_kf8uo")
+bus = &"UI"
+
+[node name="VSeparator" type="VSeparator" parent="MainContainer"]
+modulate = Color(1, 1, 1, 0)
+custom_minimum_size = Vector2(0, 25)
+layout_mode = 2
+
+[node name="SettingsButton" type="Button" parent="MainContainer" node_paths=PackedStringArray("main_container", "settings_container")]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_facay")
+theme_override_font_sizes/font_size = 44
+text = "SETTINGS"
+script = SubResource("GDScript_xtv14")
+main_container = NodePath("..")
+settings_container = NodePath("../../SettingsContainer")
+
+[node name="HoverSound" type="AudioStreamPlayer" parent="MainContainer/SettingsButton"]
+stream = ExtResource("6_134ry")
+bus = &"UI"
+
+[node name="PressSound" type="AudioStreamPlayer" parent="MainContainer/SettingsButton"]
+stream = ExtResource("7_kf8uo")
+bus = &"UI"
+
+[node name="SettingsContainer" type="VBoxContainer" parent="."]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+script = SubResource("GDScript_q2m0l")
+
+[node name="MasterContainer" type="VBoxContainer" parent="SettingsContainer"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="SettingsContainer/MasterContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_facay")
+theme_override_font_sizes/font_size = 22
+text = "master volume"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingsContainer/MasterContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="HSlider" type="HSlider" parent="SettingsContainer/MasterContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.0
+value = 0.5
+
+[node name="VolumeLabel" type="Label" parent="SettingsContainer/MasterContainer/HBoxContainer"]
+custom_minimum_size = Vector2(62, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_facay")
+theme_override_font_sizes/font_size = 22
+text = "50%"
+horizontal_alignment = 2
+
+[node name="MusicContainer" type="VBoxContainer" parent="SettingsContainer"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="SettingsContainer/MusicContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_facay")
+theme_override_font_sizes/font_size = 22
+text = "music volume"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingsContainer/MusicContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="HSlider" type="HSlider" parent="SettingsContainer/MusicContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.0
+value = 0.5
+
+[node name="VolumeLabel" type="Label" parent="SettingsContainer/MusicContainer/HBoxContainer"]
+custom_minimum_size = Vector2(62, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_facay")
+theme_override_font_sizes/font_size = 22
+text = "50%"
+horizontal_alignment = 2
+
+[node name="SFXContainer" type="VBoxContainer" parent="SettingsContainer"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="SettingsContainer/SFXContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_facay")
+theme_override_font_sizes/font_size = 22
+text = "SFX volume"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingsContainer/SFXContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="HSlider" type="HSlider" parent="SettingsContainer/SFXContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.0
+value = 0.5
+
+[node name="VolumeLabel" type="Label" parent="SettingsContainer/SFXContainer/HBoxContainer"]
+custom_minimum_size = Vector2(62, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_facay")
+theme_override_font_sizes/font_size = 22
+text = "50%"
+horizontal_alignment = 2
+
+[node name="UIContainer" type="VBoxContainer" parent="SettingsContainer"]
+layout_mode = 2
+
+[node name="NameLabel" type="Label" parent="SettingsContainer/UIContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_facay")
+theme_override_font_sizes/font_size = 22
+text = "UI volume"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="SettingsContainer/UIContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="HSlider" type="HSlider" parent="SettingsContainer/UIContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+step = 0.0
+value = 0.5
+
+[node name="VolumeLabel" type="Label" parent="SettingsContainer/UIContainer/HBoxContainer"]
+custom_minimum_size = Vector2(62, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_facay")
+theme_override_font_sizes/font_size = 22
+text = "50%"
+horizontal_alignment = 2
+
+[node name="BackButton" type="Button" parent="SettingsContainer" node_paths=PackedStringArray("main_container", "settings_container")]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_facay")
+theme_override_font_sizes/font_size = 44
+text = "BACK"
+script = SubResource("GDScript_rspdh")
+main_container = NodePath("../../MainContainer")
+settings_container = NodePath("..")
+
+[node name="HoverSound" type="AudioStreamPlayer" parent="SettingsContainer/BackButton"]
+stream = ExtResource("6_134ry")
+bus = &"UI"
+
+[node name="PressSound" type="AudioStreamPlayer" parent="SettingsContainer/BackButton"]
+stream = ExtResource("7_kf8uo")
+bus = &"UI"
+
+[connection signal="button_up" from="MainContainer/PlayButton" to="MainContainer/PlayButton/PressSound" method="play"]
+[connection signal="mouse_entered" from="MainContainer/PlayButton" to="MainContainer/PlayButton/HoverSound" method="play"]
+[connection signal="pressed" from="MainContainer/PlayButton" to="MainContainer/PlayButton" method="_on_pressed"]
+[connection signal="button_up" from="MainContainer/SettingsButton" to="MainContainer/SettingsButton/PressSound" method="play"]
+[connection signal="mouse_entered" from="MainContainer/SettingsButton" to="MainContainer/SettingsButton/HoverSound" method="play"]
+[connection signal="pressed" from="MainContainer/SettingsButton" to="MainContainer/SettingsButton" method="_on_pressed"]
+[connection signal="value_changed" from="SettingsContainer/MasterContainer/HBoxContainer/HSlider" to="SettingsContainer" method="_on_master_volume_changed"]
+[connection signal="value_changed" from="SettingsContainer/MusicContainer/HBoxContainer/HSlider" to="SettingsContainer" method="_on_music_volume_changed"]
+[connection signal="value_changed" from="SettingsContainer/SFXContainer/HBoxContainer/HSlider" to="SettingsContainer" method="_on_sfx_volume_changed"]
+[connection signal="value_changed" from="SettingsContainer/UIContainer/HBoxContainer/HSlider" to="SettingsContainer" method="_on_ui_volume_changed"]
+[connection signal="button_up" from="SettingsContainer/BackButton" to="SettingsContainer/BackButton/PressSound" method="play"]
+[connection signal="mouse_entered" from="SettingsContainer/BackButton" to="SettingsContainer/BackButton/HoverSound" method="play"]
+[connection signal="pressed" from="SettingsContainer/BackButton" to="SettingsContainer/BackButton" method="_on_pressed"]

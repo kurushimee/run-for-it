@@ -11,6 +11,10 @@ var main: Node
 
 func _ready() -> void:
 	$Name.text = item_name
+	update_price()
+
+
+func update_price() -> void:
 	$Price.text = "$" + str(item_price)
 
 
@@ -35,5 +39,7 @@ func _on_gui_input(event: InputEvent) -> void:
 		$Press.play()
 		$PostTransaction.proceed(main)
 		bought.emit(item_price)
+		item_price *= 1.5
+		update_price()
 	elif event.is_action_pressed("ui_press"):
 		modulate = Color("bbbbbb")
