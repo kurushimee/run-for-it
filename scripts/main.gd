@@ -14,8 +14,8 @@ var high_score: int
 
 # Player moving speed
 var speed: float
-const START_SPEED := 12.0
-const MAX_SPEED := 20.0
+const START_SPEED := 10.0
+const MAX_SPEED := 25.0
 const PROSTO_SPEED := 100
 const SPEED_MODIFIER := 5000
 
@@ -127,7 +127,7 @@ func generate_obstacle() -> void:
 		var obstacle_scale: Vector2i = obstacle.get_node("Sprite2D").scale
 		# Calculate the position accordingly
 		var obstacle_x: int = (
-			screen_size.x + $Player.position.x + (i * 100) + (speed / MAX_SPEED) * 100
+			screen_size.x + $Player.position.x + (i * 100) + (speed / MAX_SPEED) * 150
 		)
 		var obstacle_y: int = (
 			screen_size.y
