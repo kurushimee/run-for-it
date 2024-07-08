@@ -78,9 +78,7 @@ func _process(delta: float) -> void:
 		else:
 			return
 
-	speed = (
-		clamp(START_SPEED + score / SPEED_MODIFIER, START_SPEED, MAX_SPEED) * PROSTO_SPEED * delta
-	)
+	speed = (clamp(START_SPEED + score / SPEED_MODIFIER, START_SPEED, MAX_SPEED) * PROSTO_SPEED * delta)
 	adjust_difficulty()
 
 	generate_obstacle()
@@ -161,9 +159,7 @@ func generate_obstacle() -> void:
 		var obstacle_height: int = obstacle.get_node("Sprite2D").texture.get_height()
 		var obstacle_scale: Vector2i = obstacle.get_node("Sprite2D").scale
 		# Calculate the position accordingly
-		var obstacle_x: int = (
-			screen_size.x + $Player.position.x + (i * 100) + (speed / MAX_SPEED) * 150
-		)
+		var obstacle_x: int = screen_size.x + $Player.position.x + (i * 100) + (speed / MAX_SPEED) * 150
 		var obstacle_y: int = (
 			screen_size.y
 			- (ground_height * ground_scale)
