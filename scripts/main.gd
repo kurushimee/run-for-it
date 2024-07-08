@@ -78,7 +78,9 @@ func _process(delta: float) -> void:
 		else:
 			return
 
-	speed = (clamp(START_SPEED + score / SPEED_MODIFIER, START_SPEED, MAX_SPEED) * PROSTO_SPEED * delta)
+	speed = (
+		clamp(START_SPEED + score / SPEED_MODIFIER, START_SPEED, MAX_SPEED) * PROSTO_SPEED * delta
+	)
 	adjust_difficulty()
 
 	generate_obstacle()
@@ -159,7 +161,9 @@ func generate_obstacle() -> void:
 		var obstacle_height: int = obstacle.get_node("Sprite2D").texture.get_height()
 		var obstacle_scale: Vector2i = obstacle.get_node("Sprite2D").scale
 		# Calculate the position accordingly
-		var obstacle_x: int = screen_size.x + $Player.position.x + (i * 100) + (speed / MAX_SPEED) * 150
+		var obstacle_x: int = (
+			screen_size.x + $Player.position.x + (i * 100) + (speed / MAX_SPEED) * 150
+		)
 		var obstacle_y: int = (
 			screen_size.y
 			- (ground_height * ground_scale)
@@ -188,30 +192,25 @@ func adjust_difficulty() -> void:
 	difficulty = clamp(score / SPEED_MODIFIER, 0, MAX_DIFFICULTY)
 
 
-func calculate_run_reward() -> int:
-	var final_score: int = score / SCORE_MODIFIER / 7  # Calculate how much player gets from just running
-	var run_reward: int = final_score * (speed / START_SPEED)  # Add speed bonus to the ran amount
-	run_reward *= (
-		clamp(cats_max, 1, 999)
-		* clamp(green_max * GREEN_UP, 1, 999)
-		* clamp(pink_max * PINK_UP, 1, 999)
-		* clamp(blue_max * BLUE_UP, 1, 999)
-	)
-	if earned + run_reward < max_money:
-		run_reward *= 1 + (1 - (earned + run_reward) / max_money)
-	return run_reward
-
-
 func end_game() -> void:
 	get_tree().paused = true
 	game_running = false
 	$RunningMusic/AnimationPlayer.play("ost_fade_out")
 
-	# Calculate money reward for the run
-	earned += calculate_run_reward()
-	money += earned
-	if money > max_money:
-		max_money = money
+	# Calculate how much player gets from just running
+	var final_score: int = score / SCORE_MODIFIER / 10
+	# Add speed bonus to the ran amount
+	var run_reward: int = final_score * (speed / START_SPEED)
+	earned += run_reward
+	if earned < money:
+		earned *= 1 + (1 - earned / money)
+	money += (
+		earned
+		* clamp(cats_max, 1, 999)
+		* clamp(green_max * GREEN_UP, 1, 999)
+		* clamp(pink_max * PINK_UP, 1, 999)
+		* clamp(blue_max * BLUE_UP, 1, 999)
+	)
 
 	$GameOver/Earned.text = "+" + str(earned) + "$"
 	$GameOver/Earned.modulate = Color.GREEN
