@@ -1,23 +1,33 @@
 extends Node
 
-@export var cat_colors: Array[PackedScene]
+# Cat variant scenes
+@export var cat_variants: Array[PackedScene]
 @export var blue_cat: PackedScene
 @export var green_cat: PackedScene
 @export var pink_cat: PackedScene
-var cats_max := 0
-var cats: Array[Cat]
-const GREEN_UP := 4
-var green_max := 0
-var greens: Array[Cat]
-const PINK_UP := 8
-var pink_max := 0
-var pinks: Array[Cat]
-const BLUE_UP := 16
-var blue_max := 0
-var blues: Array[Cat]
 
-@export var available_obstacles: Array[PackedScene]
-var obstacles: Array[Item]
+# Cat variant buffs
+const CAT_BONUS := 2
+const GREEN_CAT_BONUS := 3
+const PINK_CAT_BONUS := 5
+const BLUE_CAT_BONUS := 10
+
+# Regular cats
+var cats_spawned: Array[Cat]
+var cats_owned: int
+# Green cats
+var green_cats_spawned: Array[Cat]
+var green_cats_owned: int
+# Pink cats
+var pink_cats_spawned: Array[Cat]
+var pink_cats_owned: int
+# Blue cats
+var blue_cats_spawned: Array[Cat]
+var blue_cats_owned: int
+
+@export var item_variants: Array[PackedScene]
+var items_spawned: Array[Item]
+var last_item_spawned: Item
 
 # Initial positions
 const PLAYER_START_POS := Vector2i(150, 444)
@@ -28,14 +38,14 @@ var score: int
 const SCORE_MODIFIER := 10
 var high_score: int
 
-# Money
-var money := 0
-var max_money := 0
+# Cash
+var money: int
+var max_money: int
 var earned: int
 
 # Player moving speed
 var speed: float
-const START_SPEED := 12.0
+const START_SPEED := 10.0
 const MAX_SPEED := 25.0
 const PROSTO_SPEED := 100
 const SPEED_MODIFIER := 5000
@@ -45,8 +55,6 @@ var game_running: bool
 
 var difficulty: int
 const MAX_DIFFICULTY := 2
-
-var last_obstacle: Item
 
 var ground_height: int
 var ground_scale: int
@@ -65,11 +73,13 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	# Show in-game menu when <ESC> is pressed
 	if Input.is_action_just_pressed("menu"):
 		$Menu.show()
 		get_tree().paused = true
 		return
 
+	# Start the game if received input to do so, otherwise halt the game loop
 	if not game_running:
 		if Input.is_action_pressed("jump"):
 			game_running = true
@@ -83,7 +93,7 @@ func _process(delta: float) -> void:
 	)
 	adjust_difficulty()
 
-	generate_obstacle()
+	generate_item()
 
 	# Move the player forward
 	$Player.position.x += speed
@@ -97,10 +107,10 @@ func _process(delta: float) -> void:
 	if $Camera2D.position.x - $Ground.position.x > screen_size.x * 1.5:
 		$Ground.position.x += screen_size.x
 
-	# Remove the obstacles that have gone off screen
-	for obstacle in obstacles:
+	# Remove the items_spawned that have gone off screen
+	for obstacle in items_spawned:
 		if obstacle.position.x < ($Camera2D.position.x - screen_size.x):
-			remove_obstacle(obstacle)
+			remove_item(obstacle)
 
 
 func new_game() -> void:
@@ -114,11 +124,11 @@ func new_game() -> void:
 	difficulty = 0
 
 	generate_cat()
-	# Delete all obstacles
-	for obstacle in obstacles:
+	# Delete all items_spawned
+	for obstacle in items_spawned:
 		obstacle.queue_free()
-	obstacles.clear()
-	last_obstacle = null
+	items_spawned.clear()
+	last_item_spawned = null
 
 	# Reset nodes
 	$Player.position = PLAYER_START_POS
@@ -145,47 +155,45 @@ func check_high_score() -> void:
 		$HUD/HighScoreLabel.text = "HIGHSCORE: " + str(high_score / SCORE_MODIFIER)
 
 
-func generate_obstacle() -> void:
-	if not obstacles.is_empty():
-		if last_obstacle != null:
-			if last_obstacle.position.x >= score + randi_range(300, 500):
+func generate_item() -> void:
+	if not items_spawned.is_empty():
+		if last_item_spawned != null:
+			if last_item_spawned.position.x >= score + randi_range(300, 500):
 				return
-	var obstacle_type := available_obstacles[randi() % available_obstacles.size()]
-	var obstacle: Item
+	var item_type := item_variants[randi() % item_variants.size()]
+	var item: Item
 
-	var max_obstacles := difficulty + 1
-	for i in randi() % max_obstacles + 1:
-		obstacle = obstacle_type.instantiate()
+	var max_items := difficulty + 1
+	for i in randi() % max_items + 1:
+		item = item_type.instantiate()
 
-		# Get obstacle's sprite pixel lengths
-		var obstacle_height: int = obstacle.get_node("Sprite2D").texture.get_height()
-		var obstacle_scale: Vector2i = obstacle.get_node("Sprite2D").scale
+		# Get item's sprite pixel lengths
+		var item_height: int = item.get_node("Sprite2D").texture.get_height()
+		var item_scale: Vector2i = item.get_node("Sprite2D").scale
 		# Calculate the position accordingly
-		var obstacle_x: int = (
-			screen_size.x + $Player.position.x + (i * 100) + (speed / MAX_SPEED) * 150
-		)
-		var obstacle_y: int = (
+		var item_x: int = screen_size.x + $Player.position.x + (i * 100) + (speed / MAX_SPEED) * 150
+		var item_y: int = (
 			screen_size.y
 			- (ground_height * ground_scale)
-			- (obstacle_height * obstacle_scale.y / 2)
-			+ (2 * obstacle_scale.y)
+			- (item_height * item_scale.y / 2)
+			+ (2 * item_scale.y)
 		)
 
-		add_obstacle(obstacle, obstacle_x, obstacle_y)
+		add_item(item, item_x, item_y)
 
 
-func add_obstacle(obstacle: Item, x: int, y: int) -> void:
-	obstacle.position = Vector2i(x, y)
-	obstacle.main = self
-	obstacle.body_entered.connect(obstacle.on_hit)
-	last_obstacle = obstacle
-	add_child(obstacle)
-	obstacles.append(obstacle)
+func add_item(item: Item, x: int, y: int) -> void:
+	item.position = Vector2i(x, y)
+	item.main = self
+	item.body_entered.connect(item.on_hit)
+	last_item_spawned = item
+	add_child(item)
+	items_spawned.append(item)
 
 
-func remove_obstacle(obstacle: Area2D):
-	obstacles.erase(obstacle)
-	obstacle.queue_free()
+func remove_item(item: Item):
+	items_spawned.erase(item)
+	item.queue_free()
 
 
 func adjust_difficulty() -> void:
@@ -206,10 +214,10 @@ func end_game() -> void:
 		earned *= 1 + (1 - earned / money)
 	money += (
 		earned
-		* clamp(cats_max, 1, 999)
-		* clamp(green_max * GREEN_UP, 1, 999)
-		* clamp(pink_max * PINK_UP, 1, 999)
-		* clamp(blue_max * BLUE_UP, 1, 999)
+		* clamp(cats_owned, 1, 999)
+		* clamp(green_cats_owned * GREEN_CAT_BONUS, 1, 999)
+		* clamp(pink_cats_owned * PINK_CAT_BONUS, 1, 999)
+		* clamp(blue_cats_owned * BLUE_CAT_BONUS, 1, 999)
 	)
 
 	$GameOver/Earned.text = "+" + str(earned) + "$"
@@ -221,19 +229,19 @@ func end_game() -> void:
 
 
 func generate_cat() -> void:
-	if greens.size() < green_max:
-		for i in green_max - greens.size():
-			greens.append(add_cat(green_cat))
-	elif pinks.size() < pink_max:
-		for i in pink_max - pinks.size():
-			pinks.append(add_cat(pink_cat))
-	elif blues.size() < blue_max:
-		for i in blue_max - blues.size():
-			blues.append(add_cat(blue_cat))
-	elif cats.size() < cats_max:
-		for i in cats_max - cats.size():
-			var cat_type = cat_colors[randi() % cat_colors.size()]
-			cats.append(add_cat(cat_type))
+	if green_cats_spawned.size() < green_cats_owned:
+		for i in green_cats_owned - green_cats_spawned.size():
+			green_cats_spawned.append(add_cat(green_cat))
+	if pink_cats_spawned.size() < pink_cats_owned:
+		for i in pink_cats_owned - pink_cats_spawned.size():
+			pink_cats_spawned.append(add_cat(pink_cat))
+	if blue_cats_spawned.size() < blue_cats_owned:
+		for i in blue_cats_owned - blue_cats_spawned.size():
+			blue_cats_spawned.append(add_cat(blue_cat))
+	if cats_spawned.size() < cats_owned:
+		for i in cats_owned - cats_spawned.size():
+			var cat_type = cat_variants[randi() % cat_variants.size()]
+			cats_spawned.append(add_cat(cat_type))
 
 
 func add_cat(cat_type: PackedScene) -> Cat:
