@@ -117,6 +117,7 @@ one_shot = true
 
 [node name="MeowSound" type="AudioStreamPlayer2D" parent="."]
 stream = SubResource("AudioStreamRandomizer_tvk47")
+volume_db = -15.0
 max_distance = 1000.0
 bus = &"SFX"
 

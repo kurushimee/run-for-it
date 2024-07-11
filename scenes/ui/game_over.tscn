@@ -23,26 +23,26 @@ script/source = "extends Label
 
 
 func _ready() -> void:
-	reset()
+  reset()
 
 
 func _process(delta: float) -> void:
-	if modulate.a > 0.0:
-		modulate.a -= fade_out_speed * delta
+  if modulate.a > 0.0:
+    modulate.a -= fade_out_speed * delta
 
 
 func reset() -> void:
-	$AnimationPlayer.play(\"RESET\")
-	$AnimationPlayer.play(\"float_away\")
-	modulate.a = 1.0
-	if $Timer.is_stopped():
-		$Timer.start()
-	set_process(false)
+  $AnimationPlayer.play(\"RESET\")
+  $AnimationPlayer.play(\"float_away\")
+  modulate.a = 1.0
+  if $Timer.is_stopped():
+    $Timer.start()
+  set_process(false)
 
 
 func _on_timer_timeout() -> void:
-	set_process(true)
-	$Timer.stop()
+  set_process(true)
+  $Timer.stop()
 "
 
 [sub_resource type="Animation" id="Animation_lpyu8"]
@@ -123,52 +123,72 @@ _data = {
 [sub_resource type="GDScript" id="GDScript_i3cin"]
 script/source = "extends Node
 
+signal price_changed
+
 
 func proceed(main: Node) -> void:
-	var hud := main.get_node(\"HUD\")
-	hud.max_time += 5.0
-	hud.time = hud.max_time
-	hud.render_time()
+  var hud := main.get_node(\"HUD\")
+  hud.max_time += 5.0
+  hud.time = hud.max_time
+  hud.render_time()
+  get_parent().price_money.mul(1.5)
+  price_changed.emit()
 "
 
 [sub_resource type="GDScript" id="GDScript_bmhsc"]
 resource_name = "BuyCat"
 script/source = "extends Node
 
+signal price_changed
+
 
 func proceed(main: Node) -> void:
-	main.cats_max += 1
-	main.generate_cat()
+  main.cats_owned += 1
+  main.generate_cat()
+  get_parent().price_money.mul(2)
+  price_changed.emit()
 "
 
 [sub_resource type="GDScript" id="GDScript_evre8"]
 resource_name = "BuyGreenCat"
 script/source = "extends Node
 
+signal price_changed
+
 
 func proceed(main: Node) -> void:
-	main.green_max += 1
-	main.generate_cat()
+  main.green_cats_owned += 1
+  main.generate_cat()
+  get_parent().price_money.mul(3)
+  price_changed.emit()
 "
 
 [sub_resource type="GDScript" id="GDScript_tcfkp"]
 resource_name = "BuyPinkCat"
 script/source = "extends Node
 
+signal price_changed
+
 
 func proceed(main: Node) -> void:
-	main.pink_max += 1
-	main.generate_cat()
+  main.pink_cats_owned += 1
+  main.generate_cat()
+  get_parent().price_money.mul(4)
+  price_changed.emit()
 "
 
 [sub_resource type="GDScript" id="GDScript_d5joj"]
 resource_name = "BuyBlueCat"
 script/source = "extends Node
 
+signal price_changed
+
 
 func proceed(main: Node) -> void:
-	main.blue_max += 1
-	main.generate_cat()
+  main.blue_cats_owned += 1
+  main.generate_cat()
+  get_parent().price_money.mul(5)
+  price_changed.emit()
 "
 
 [sub_resource type="Animation" id="Animation_8k3tj"]
@@ -338,59 +358,78 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
+offset_left = -250.0
+offset_top = -244.0
+offset_right = 250.0
+offset_bottom = 206.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+horizontal_scroll_mode = 0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Shop"]
+[node name="PanelContainer" type="PanelContainer" parent="Shop"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Shop/PanelContainer"]
+custom_minimum_size = Vector2(475, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
 alignment = 1
 
-[node name="BuyTime" parent="Shop/VBoxContainer" instance=ExtResource("5_l70se")]
+[node name="Label" type="Label" parent="Shop/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.835294, 0.462745, 1)
+theme_override_fonts/font = ExtResource("1_ts5rb")
+theme_override_font_sizes/font_size = 44
+text = "UPGRADES"
+horizontal_alignment = 1
+
+[node name="BuyTime" parent="Shop/PanelContainer/VBoxContainer" instance=ExtResource("5_l70se")]
 layout_mode = 2
 item_name = "+5 seconds"
-item_price = 256
+price_string = "250"
 
-[node name="PostTransaction" type="Node" parent="Shop/VBoxContainer/BuyTime"]
+[node name="PostTransaction" type="Node" parent="Shop/PanelContainer/VBoxContainer/BuyTime"]
 script = SubResource("GDScript_i3cin")
 
-[node name="BuyCat" parent="Shop/VBoxContainer" instance=ExtResource("5_l70se")]
+[node name="BuyCat" parent="Shop/PanelContainer/VBoxContainer" instance=ExtResource("5_l70se")]
 layout_mode = 2
-item_name = "adopt a cat (x2)"
-item_price = 2560
+item_name = "common cat (x2 $)"
+price_string = "2.5K"
+rarenesss_color = Color(0.992157, 0.996078, 0.996078, 1)
 
-[node name="PostTransaction" type="Node" parent="Shop/VBoxContainer/BuyCat"]
+[node name="PostTransaction" type="Node" parent="Shop/PanelContainer/VBoxContainer/BuyCat"]
 script = SubResource("GDScript_bmhsc")
 
-[node name="BuyGreenCat" parent="Shop/VBoxContainer" instance=ExtResource("5_l70se")]
+[node name="BuyGreenCat" parent="Shop/PanelContainer/VBoxContainer" instance=ExtResource("5_l70se")]
 layout_mode = 2
-item_name = "find a barf cat (x4)"
-item_price = 5120
+item_name = "uncommon cat (x4 $$)"
+price_string = "10K"
+rarenesss_color = Color(0.152941, 0.682353, 0.376471, 1)
 
-[node name="PostTransaction" type="Node" parent="Shop/VBoxContainer/BuyGreenCat"]
+[node name="PostTransaction" type="Node" parent="Shop/PanelContainer/VBoxContainer/BuyGreenCat"]
 script = SubResource("GDScript_evre8")
 
-[node name="BuyPinkCat" parent="Shop/VBoxContainer" instance=ExtResource("5_l70se")]
+[node name="BuyPinkCat" parent="Shop/PanelContainer/VBoxContainer" instance=ExtResource("5_l70se")]
 layout_mode = 2
-item_name = "color a cat pink (x8)"
-item_price = 10240
+item_name = "rare cat (x8 $$$)"
+price_string = "100K"
+rarenesss_color = Color(0.141176, 0.443137, 0.639216, 1)
 
-[node name="PostTransaction" type="Node" parent="Shop/VBoxContainer/BuyPinkCat"]
+[node name="PostTransaction" type="Node" parent="Shop/PanelContainer/VBoxContainer/BuyPinkCat"]
 script = SubResource("GDScript_tcfkp")
 
-[node name="BuyBlueCat" parent="Shop/VBoxContainer" instance=ExtResource("5_l70se")]
+[node name="BuyBlueCat" parent="Shop/PanelContainer/VBoxContainer" instance=ExtResource("5_l70se")]
 layout_mode = 2
-item_name = "steal a vaporeon (x16)"
-item_price = 24576
+item_name = "epic cat (x16 $$$$)"
+price_string = "1M"
+rarenesss_color = Color(0.490196, 0.235294, 0.596078, 1)
 
-[node name="PostTransaction" type="Node" parent="Shop/VBoxContainer/BuyBlueCat"]
+[node name="PostTransaction" type="Node" parent="Shop/PanelContainer/VBoxContainer/BuyBlueCat"]
 script = SubResource("GDScript_d5joj")
 
 [node name="ShopMusic" type="AudioStreamPlayer" parent="."]

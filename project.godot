@@ -11,10 +11,10 @@ config_version=5
 [application]
 
 config/name="Run For It"
-config/version="1.0"
+config/version="1.1"
 run/main_scene="res://scenes/ui/main_menu.tscn"
 config/features=PackedStringArray("4.2", "GL Compatibility")
-config/icon="res://icon.svg"
+config/icon="res://icon.png"
 
 [debug]
 
@@ -25,7 +25,12 @@ gdscript/warnings/narrowing_conversion=0
 
 window/size/resizable=false
 window/stretch/mode="viewport"
+window/stretch/scale_mode="integer"
 window/dpi/allow_hidpi=false
+
+[dotnet]
+
+project/assembly_name="Run For It"
 
 [filesystem]
 

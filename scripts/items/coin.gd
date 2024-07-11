@@ -13,5 +13,5 @@ func interact() -> void:
 
 	$AmountEarned.position.x += randi_range(-10, 10)
 	$AmountEarned.position.y += randi_range(-10, 10)
-	$AmountEarned.text = "+" + str(earned)
+	$AmountEarned.text = "+$" + str(earned)
 	$AmountEarned.show()

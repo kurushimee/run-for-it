@@ -10,7 +10,7 @@ func _process(_delta: float) -> void:
 		$AnimatedSprite2D.play("run")
 
 	if $Timer.is_stopped():
-		$Timer.start(randf_range(1.0, 5.0))
+		$Timer.start(randf_range(3.0, 10.0))
 
 
 func _on_timer_timeout() -> void:
