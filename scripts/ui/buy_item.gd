@@ -22,23 +22,23 @@ func _ready() -> void:
 func increase_level() -> void:
   level += 1
   $Level/Label.text = str(level)
-  if level > 0 and level <= 2:
+  if level >= 1 and level < 3:
     $Level.modulate = Color("FDFEFE")
-  if level > 2 and level <= 5:
+  if level >= 3 and level < 5:
     $Level.modulate = Color("27AE60")
-  if level > 5 and level <= 10:
+  if level >= 5 and level < 10:
     $Level.modulate = Color("2471A3")
-  if level > 10 and level <= 15:
+  if level >= 10 and level < 15:
     $Level.modulate = Color("7D3C98")
-  if level > 15 and level <= 20:
+  if level >= 15 and level < 20:
     $Level.modulate = Color("F1C40F")
-  if level > 20 and level <= 25:
+  if level >= 20 and level < 25:
     $Level.modulate = Color("D35400")
-  if level > 25 and level <= 50:
+  if level >= 25 and level < 50:
     $Level.modulate = Color("7B241C")
-  if level > 50 and level <= 100:
+  if level >= 50 and level < 100:
     $Level.modulate = Color("B3CA1F")
-  if level > 100:
+  if level >= 100:
     $Level.modulate = Color("DC2367")
 
 
